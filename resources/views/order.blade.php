@@ -18,6 +18,26 @@
     @foreach($order->items as $i)<div class="flex justify-between text-sm py-1"><span>{{ $i->variant->product->name }} ({{ $i->variant->label() }}) x{{ $i->qty }}</span><span>₱{{ number_format($i->price*$i->qty,0) }}</span></div>@endforeach
     <div class="flex justify-between font-semibold border-t mt-2 pt-2"><span>Total</span><span>₱{{ number_format($order->total,0) }}</span></div>
   </div>
+  @if($order->status !== 'cancelled')
+    <div class="bg-white rounded-2xl p-5 mt-6 shadow-sm">
+      <p class="font-semibold">Scan at the counter</p>
+      <div id="qr" class="flex justify-center mt-3"></div>
+      <p class="text-xs text-ink/60 mt-2">Code: {{ $order->code }}</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 mt-6 shadow-sm text-left">
+      <p class="font-semibold">{{ config('store.name') }}</p>
+      <p class="text-sm text-ink/70">{{ config('store.address') }}</p>
+      <p class="text-sm text-ink/70">{{ config('store.hours') }}@if(config('store.phone')) &middot; {{ config('store.phone') }}@endif</p>
+      <iframe class="w-full h-64 rounded-xl mt-3 border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://maps.google.com/maps?q={{ config('store.lat') }},{{ config('store.lng') }}&z=17&output=embed"></iframe>
+      <a href="https://www.google.com/maps/dir/?api=1&destination={{ config('store.lat') }},{{ config('store.lng') }}" target="_blank" rel="noopener"
+         class="{{ $btn }} bg-brand text-white inline-block mt-3">Get directions</a>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+      if (window.QRCode) new QRCode(document.getElementById('qr'), {text: @json($order->code), width: 160, height: 160});
+    </script>
+  @endif
   @if($order->status === 'reserved' && $order->user_id === auth()->id())
     <form method="POST" action="{{ route('order.cancel', $order) }}" class="mt-5" onsubmit="return confirm('Cancel this reservation? The items will go back on sale.')">@csrf
       <button class="{{ $btn }} border border-blush text-blush hover:bg-blush/10">Cancel reservation</button>

@@ -4,7 +4,7 @@
 <h1 class="font-serif text-3xl font-bold mb-6">Pick up in store</h1>
 <form method="POST" action="{{ route('order.store') }}" class="lg:grid lg:grid-cols-3 lg:gap-8">@csrf
   <div class="lg:col-span-2 space-y-4">
-    <div class="bg-white rounded-2xl p-5 shadow-sm"><p class="font-semibold">Archilo Fashion Boutique</p><p class="text-sm text-ink/70">[store address] &middot; [opening hours]</p></div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm"><p class="font-semibold">Archilo Fashion Boutique</p><p class="text-sm text-ink/70">{{ config('store.address') }} &middot; {{ config('store.hours') }}</p></div>
     <div class="bg-white rounded-2xl p-5 shadow-sm grid sm:grid-cols-2 gap-4">
       <label class="text-sm font-medium">Pickup date
         <input type="date" name="pickup_date" min="{{ now()->toDateString() }}" value="{{ old('pickup_date') }}" required class="mt-1 w-full rounded-xl border border-ink/20 px-3 py-3"></label>

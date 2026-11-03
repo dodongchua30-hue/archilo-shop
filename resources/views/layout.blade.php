@@ -54,7 +54,7 @@ tailwind.config = { theme: { extend: {
 <footer class="bg-ink text-white/80 mt-10">
   <div class="max-w-7xl mx-auto px-4 lg:px-8 py-8 grid gap-4 md:grid-cols-2 text-sm">
     <div><p class="font-serif text-lg text-white">Archilo Fashion Boutique</p><p>In-store pickup only. No delivery.</p></div>
-    <div><p>Visit us: 123 Session Road, Baguio City</p><p>Open daily: 10:00 AM to 8:00 PM</p></div>
+    <div><p>Visit us: {{ config('store.address') }}</p><p>Open daily: {{ config('store.hours') }}</p></div>
   </div>
 </footer>
 
