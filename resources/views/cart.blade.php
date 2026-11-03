@@ -12,7 +12,7 @@
         <div class="w-16 h-20 rounded-xl bg-brand-light overflow-hidden flex items-center justify-center font-serif text-2xl text-brand">
           @if($i['v']->product->image)<img src="{{ asset('images/'.$i['v']->product->image) }}" alt="{{ $i['v']->product->name }}" class="w-full h-full object-cover">@else {{ substr($i['v']->product->name,0,1) }} @endif
         </div>
-        <div class="flex-1"><p class="font-medium">{{ $i['v']->product->name }}</p><p class="text-sm text-ink/70">Size {{ $i['v']->size }} &middot; Qty {{ $i['qty'] }}</p></div>
+        <div class="flex-1"><p class="font-medium">{{ $i['v']->product->name }}</p><p class="text-sm text-ink/70">Size {{ $i['v']->label() }} &middot; Qty {{ $i['qty'] }}</p></div>
         <div class="text-right"><p class="font-serif font-semibold">₱{{ number_format($i['qty']*$i['v']->product->price,0) }}</p>
           <form method="POST" action="{{ route('cart.remove',$i['v']->id) }}">@csrf<button class="text-xs text-blush font-medium">Remove</button></form></div>
       </div>

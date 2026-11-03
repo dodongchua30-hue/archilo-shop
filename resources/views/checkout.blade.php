@@ -15,7 +15,7 @@
     <p class="text-sm text-ink/70 px-1">Payment is made in store when you collect your items.</p>
   </div>
   <div class="mt-6 lg:mt-0 bg-white rounded-2xl p-5 shadow-sm h-fit">
-    @foreach($items as $i)<div class="flex justify-between text-sm py-1"><span>{{ $i['v']->product->name }} ({{ $i['v']->size }}) x{{ $i['qty'] }}</span><span>₱{{ number_format($i['qty']*$i['v']->product->price,0) }}</span></div>@endforeach
+    @foreach($items as $i)<div class="flex justify-between text-sm py-1"><span>{{ $i['v']->product->name }} ({{ $i['v']->label() }}) x{{ $i['qty'] }}</span><span>₱{{ number_format($i['qty']*$i['v']->product->price,0) }}</span></div>@endforeach
     <div class="flex justify-between bg-brand text-white rounded-xl px-4 py-3 font-semibold mt-3"><span>TOTAL</span><span>₱{{ number_format($total,0) }}</span></div>
     <button class="{{ $btn }} w-full bg-buy text-white hover:opacity-90 mt-4">Reserve for pickup</button>
   </div>

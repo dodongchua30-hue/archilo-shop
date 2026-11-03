@@ -32,11 +32,8 @@ class AdminController extends Controller
         $s = $r->validate(['status' => 'required|in:reserved,ready,collected,cancelled'])['status'];
         if ($order->status === 'cancelled') return back()->withErrors('Cancelled orders cannot be changed.');
         if ($s === 'cancelled') { // return reserved items to stock
-            foreach ($order->items as $i) {
-                $v = Variant::find($i->variant_id);
-                $v->increment('stock', $i->qty);
-                StockLog::record($v, $i->qty, "Order {$order->code} cancelled");
-            }
+            $order->cancelAndRestock("Order {$order->code} cancelled");
+            return back();
         }
         $order->update(['status' => $s]);
         return back();

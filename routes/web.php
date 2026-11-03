@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{ShopController,CartController,OrderController,AuthController,AdminController,StaffController,OwnerController,SearchController,WishlistController,PasswordResetController};
+use App\Http\Controllers\{ShopController,CartController,OrderController,AuthController,AdminController,StaffController,OwnerController,SearchController,WishlistController,PasswordResetController,UserManagementController};
 
 Route::get('/', [ShopController::class,'home'])->name('home');
 Route::get('/shop/{category}', [ShopController::class,'category'])->name('category');
@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout', [OrderController::class,'store'])->name('order.store');
     Route::get('/orders', [OrderController::class,'index'])->name('orders');
     Route::get('/orders/{order}', [OrderController::class,'show'])->name('order.show');
+    Route::post('/orders/{order}/cancel', [OrderController::class,'cancel'])->name('order.cancel');
     Route::get('/wishlist', [WishlistController::class,'index'])->name('wishlist');
     Route::post('/wishlist/{product}', [WishlistController::class,'toggle'])->name('wishlist.toggle');
 });
@@ -47,6 +48,8 @@ Route::prefix('staff')->middleware(['auth', \App\Http\Middleware\StaffOnly::clas
     Route::get('/products/{product}/edit', [StaffController::class, 'edit'])->name('staff.products.edit');
     Route::put('/products/{product}', [StaffController::class, 'update'])->name('staff.products.update');
     Route::delete('/products/{product}', [StaffController::class, 'destroy'])->name('staff.products.destroy');
+    Route::post('/products/{product}/colours', [StaffController::class, 'addColour'])->name('staff.products.colours.add');
+    Route::put('/products/{product}/colours', [StaffController::class, 'renameColour'])->name('staff.products.colours.rename');
 });
 
 // Administrator only: dashboard, sales reports, low-stock thresholds, stock history
@@ -57,4 +60,10 @@ Route::prefix('admin')->middleware(['auth', \App\Http\Middleware\AdminOnly::clas
     Route::post('/thresholds', [OwnerController::class, 'setAllThresholds'])->name('owner.thresholds.all');
     Route::post('/thresholds/{variant}', [OwnerController::class, 'setThreshold'])->name('owner.thresholds.set');
     Route::get('/history', [OwnerController::class, 'history'])->name('owner.history');
+    Route::get('/users', [UserManagementController::class, 'index'])->name('owner.users');
+    Route::get('/users/create', [UserManagementController::class, 'create'])->name('owner.users.create');
+    Route::post('/users', [UserManagementController::class, 'store'])->name('owner.users.store');
+    Route::get('/users/{user}/edit', [UserManagementController::class, 'edit'])->name('owner.users.edit');
+    Route::put('/users/{user}', [UserManagementController::class, 'update'])->name('owner.users.update');
+    Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('owner.users.destroy');
 });

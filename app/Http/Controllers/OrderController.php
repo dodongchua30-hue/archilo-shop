@@ -44,6 +44,15 @@ class OrderController extends Controller
     {
         return view('orders', ['orders' => Order::where('user_id', auth()->id())->latest()->get()]);
     }
+    public function cancel(Order $order)
+    {
+        abort_unless($order->user_id === auth()->id(), 403);
+        if ($order->status !== 'reserved') {
+            return back()->withErrors('Only reserved orders can be cancelled online. Please contact the store about orders that are ready for pickup.');
+        }
+        $order->cancelAndRestock("Order {$order->code} cancelled by customer");
+        return redirect()->route('order.show', $order)->with('ok', 'Your reservation was cancelled and the items were returned to stock.');
+    }
     public function show(Order $order)
     {
         abort_unless($order->user_id === auth()->id() || in_array(auth()->user()->role, ['admin', 'staff']), 403);

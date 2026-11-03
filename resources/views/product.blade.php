@@ -21,18 +21,58 @@
       @endauth
     </div>
     <form method="POST" action="{{ route('cart.add') }}" class="mt-6">@csrf
+      @php
+        $colors = $product->variants->pluck('color')->unique()->values();
+        $multi = $colors->count() > 1;
+        $first = $colors->first(fn ($c) => $product->variants->where('color', $c)->sum('stock') > 0) ?? $colors->first();
+      @endphp
+      @if($multi)
+        <p class="font-medium mb-2">Select colour</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          @foreach($colors as $c)
+            <button type="button" data-colour="{{ $c }}" class="colour-chip chip px-4 py-3 rounded-xl border border-ink/20 {{ $c === $first ? 'bg-ink text-white' : 'bg-white' }} {{ $product->variants->where('color', $c)->sum('stock') ? '' : 'line-through opacity-60' }}">{{ $c }}</button>
+          @endforeach
+        </div>
+      @endif
       <p class="font-medium mb-2">Select size</p>
-      <div class="flex flex-wrap gap-2">
-        @foreach($product->variants as $v)
-          <label class="{{ $v->stock ? 'cursor-pointer' : 'opacity-40 cursor-not-allowed' }}">
-            <input type="radio" name="variant_id" value="{{ $v->id }}" class="peer sr-only" {{ $v->stock ? 'required' : 'disabled' }}>
-            <span class="chip block min-w-[56px] text-center px-4 py-3 rounded-xl border border-ink/20 bg-white peer-checked:bg-ink peer-checked:text-white {{ $v->stock ? '' : 'line-through' }}">{{ $v->size }}</span>
-          </label>
-        @endforeach
-      </div>
+      @foreach($colors as $c)
+        <div class="size-group flex flex-wrap gap-2 {{ $c === $first ? '' : 'hidden' }}" data-colour="{{ $c }}">
+          @foreach($product->variants->where('color', $c) as $v)
+            <label class="{{ $v->stock ? 'cursor-pointer' : 'opacity-40 cursor-not-allowed' }}">
+              <input type="radio" name="variant_id" value="{{ $v->id }}" data-instock="{{ $v->stock ? 1 : 0 }}" class="peer sr-only" {{ $v->stock && $c === $first ? 'required' : 'disabled' }}>
+              <span class="chip block min-w-[56px] text-center px-4 py-3 rounded-xl border border-ink/20 bg-white peer-checked:bg-ink peer-checked:text-white {{ $v->stock ? '' : 'line-through' }}">{{ $v->size }}</span>
+            </label>
+          @endforeach
+        </div>
+      @endforeach
       <p class="text-sm mt-3 {{ $product->inStock() ? 'text-green-700' : 'text-red-600' }}">{{ $product->inStock() ? 'Available for in-store pickup' : 'Currently out of stock' }}</p>
       <button class="{{ $btn }} w-full md:w-auto bg-buy text-white hover:opacity-90 mt-5" {{ $product->inStock() ? '' : 'disabled' }}>Add to cart</button>
     </form>
   </div>
 </div>
+@if($multi)
+<script>
+document.querySelectorAll('.colour-chip').forEach(function (chip) {
+  chip.addEventListener('click', function () {
+    var colour = chip.dataset.colour;
+    document.querySelectorAll('.colour-chip').forEach(function (c) {
+      var on = c === chip;
+      c.classList.toggle('bg-ink', on);
+      c.classList.toggle('text-white', on);
+      c.classList.toggle('bg-white', !on);
+    });
+    document.querySelectorAll('.size-group').forEach(function (g) {
+      var active = g.dataset.colour === colour;
+      g.classList.toggle('hidden', !active);
+      g.querySelectorAll('input[type=radio]').forEach(function (i) {
+        var ok = active && i.dataset.instock === '1';
+        i.disabled = !ok;
+        i.required = ok;
+        if (!active) { i.checked = false; }
+      });
+    });
+  });
+});
+</script>
+@endif
 @endsection

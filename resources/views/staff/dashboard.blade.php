@@ -39,10 +39,10 @@
 </div>
 <div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
   <table class="w-full text-sm">
-    <thead class="bg-brand-light text-left"><tr><th class="p-3">Product</th><th class="p-3">Size</th><th class="p-3">Stock</th></tr></thead>
+    <thead class="bg-brand-light text-left"><tr><th class="p-3">Product</th><th class="p-3">Size / colour</th><th class="p-3">Stock</th></tr></thead>
     <tbody>
     @forelse($lowItems as $v)
-      <tr class="border-t"><td class="p-3 font-medium">{{ $v->product->name }}</td><td class="p-3">{{ $v->size }}</td><td class="p-3 font-semibold {{ $v->stock == 0 ? 'text-red-700' : 'text-amber-700' }}">{{ $v->stock }}</td></tr>
+      <tr class="border-t"><td class="p-3 font-medium">{{ $v->product->name }}</td><td class="p-3">{{ $v->label() }}</td><td class="p-3 font-semibold {{ $v->stock == 0 ? 'text-red-700' : 'text-amber-700' }}">{{ $v->stock }}</td></tr>
     @empty
       <tr><td colspan="3" class="p-4 text-ink/60">Nothing is running low.</td></tr>
     @endforelse

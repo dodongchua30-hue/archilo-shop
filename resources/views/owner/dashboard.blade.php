@@ -7,6 +7,7 @@
     <a href="{{ route('owner.reports') }}" class="{{ $btn }} bg-brand text-white">Sales reports</a>
     <a href="{{ route('owner.thresholds') }}" class="{{ $btn }} bg-ink text-white">Low-stock thresholds</a>
     <a href="{{ route('owner.history') }}" class="{{ $btn }} bg-ink text-white">Stock history</a>
+    <a href="{{ route('owner.users') }}" class="{{ $btn }} bg-ink text-white">Accounts</a>
   </div>
 </div>
 

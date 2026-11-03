@@ -17,12 +17,12 @@
 </form>
 <div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
   <table class="w-full text-sm">
-    <thead class="bg-brand-light text-left"><tr><th class="p-3">Product</th><th class="p-3">Size</th><th class="p-3">Stock</th><th class="p-3">Status</th><th class="p-3">Adjust</th></tr></thead>
+    <thead class="bg-brand-light text-left"><tr><th class="p-3">Product</th><th class="p-3">Size / colour</th><th class="p-3">Stock</th><th class="p-3">Status</th><th class="p-3">Adjust</th></tr></thead>
     <tbody>
     @foreach($variants as $v)
       @php [$label,$cls] = $v->stock==0 ? ['Out','bg-red-100 text-red-700'] : ($v->stock <= $v->low_stock_at ? ['Low','bg-amber-100 text-amber-700'] : ['OK','bg-green-100 text-green-700']); @endphp
       <tr class="border-t">
-        <td class="p-3 font-medium">{{ $v->product->name }}</td><td class="p-3">{{ $v->size }}</td><td class="p-3 font-semibold">{{ $v->stock }}</td>
+        <td class="p-3 font-medium">{{ $v->product->name }}</td><td class="p-3">{{ $v->label() }}</td><td class="p-3 font-semibold">{{ $v->stock }}</td>
         <td class="p-3"><span class="rounded-full px-3 py-1 text-xs font-semibold {{ $cls }}">{{ $label }}</span></td>
         <td class="p-3"><form method="POST" action="{{ route('admin.adjust',$v) }}" class="flex gap-2">@csrf
           <input type="number" name="change" value="1" class="w-20 rounded-lg border border-ink/20 px-2 py-2"><button class="rounded-lg bg-ink text-white px-3">Update</button></form></td>

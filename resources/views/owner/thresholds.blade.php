@@ -18,12 +18,12 @@
 
 <div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
   <table class="w-full text-sm">
-    <thead class="bg-brand-light text-left"><tr><th class="p-3">Product</th><th class="p-3">Size</th><th class="p-3">Stock</th><th class="p-3">Threshold</th></tr></thead>
+    <thead class="bg-brand-light text-left"><tr><th class="p-3">Product</th><th class="p-3">Size / colour</th><th class="p-3">Stock</th><th class="p-3">Threshold</th></tr></thead>
     <tbody>
     @foreach($variants as $v)
       <tr class="border-t">
         <td class="p-3 font-medium">{{ $v->product->name }}</td>
-        <td class="p-3">{{ $v->size }}</td>
+        <td class="p-3">{{ $v->label() }}</td>
         <td class="p-3 font-semibold">{{ $v->stock }}</td>
         <td class="p-3">
           <form method="POST" action="{{ route('owner.thresholds.set', $v) }}" class="flex gap-2">@csrf

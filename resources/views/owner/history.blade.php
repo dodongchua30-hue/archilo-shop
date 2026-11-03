@@ -14,13 +14,13 @@
 
 <div class="bg-white rounded-2xl shadow-sm overflow-x-auto">
   <table class="w-full text-sm">
-    <thead class="bg-brand-light text-left"><tr><th class="p-3">When</th><th class="p-3">Product</th><th class="p-3">Size</th><th class="p-3">Change</th><th class="p-3">Stock after</th><th class="p-3">Reason</th><th class="p-3">By</th></tr></thead>
+    <thead class="bg-brand-light text-left"><tr><th class="p-3">When</th><th class="p-3">Product</th><th class="p-3">Size / colour</th><th class="p-3">Change</th><th class="p-3">Stock after</th><th class="p-3">Reason</th><th class="p-3">By</th></tr></thead>
     <tbody>
     @forelse($logs as $l)
       <tr class="border-t">
         <td class="p-3 whitespace-nowrap">{{ $l->created_at->format('M j, g:i A') }}</td>
         <td class="p-3 font-medium">{{ $l->variant->product->name ?? '' }}</td>
-        <td class="p-3">{{ $l->variant->size ?? '' }}</td>
+        <td class="p-3">{{ $l->variant?->label() ?? '' }}</td>
         <td class="p-3 font-semibold {{ $l->delta > 0 ? 'text-green-700' : 'text-red-700' }}">{{ $l->delta > 0 ? '+' : '' }}{{ $l->delta }}</td>
         <td class="p-3">{{ $l->stock_after }}</td>
         <td class="p-3">{{ $l->reason }}</td>
